@@ -62,6 +62,14 @@ const orderLimiter = rateLimit({
 app.use(generalLimiter);
 app.use('/api/orders', orderLimiter);
 
+app.get('/', (_req, res) => {
+  res.send('DevbyBaraka API is Running!');
+});
+
+app.get('/api', (_req, res) => {
+  res.json({ message: 'API is working' });
+});
+
 app.get('/api/health', (_req, res) => {
   res.status(200).json({ status: 'ok', message: 'Portfolio and OMS API is running.' });
 });

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BadgeCheck, BriefcaseBusiness, Code2, LayoutTemplate, ShieldCheck, TabletSmartphone } from 'lucide-react';
-import api from '../api/client.js';
+import api from '../api/api.js';
 import ProjectCard from '../components/ProjectCard.jsx';
 import SectionHeading from '../components/SectionHeading.jsx';
 

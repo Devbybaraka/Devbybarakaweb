@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, Github } from 'lucide-react';
-import api from '../api/client.js';
+import api from '../api/api.js';
 
 const ProjectDetailPage = () => {
   const { slug } = useParams();

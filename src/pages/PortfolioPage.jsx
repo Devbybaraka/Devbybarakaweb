@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ExternalLink, Github } from 'lucide-react';
-import api from '../api/client.js';
+import api from '../api/api.js';
 
 const PortfolioPage = () => {
   const [projects, setProjects] = useState([]);

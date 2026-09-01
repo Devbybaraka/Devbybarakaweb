@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import api from '../api/client.js';
+import api from '../api/api.js';
 
 const orderStatuses = ['new', 'discussion', 'awaiting_payment', 'paid', 'in_progress', 'completed'];
 const paymentStatuses = ['pending', 'paid', 'failed'];
