@@ -1,6 +1,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import { ArrowRight, Briefcase, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import WhatsAppButton from './WhatsAppButton.jsx';
 
 const navItems = [
   { label: 'Work', to: '/#work' },
@@ -42,6 +43,7 @@ const Layout = ({ children }) => {
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
+            <WhatsAppButton />
             <Link
               to="/#contact"
               className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
@@ -64,6 +66,7 @@ const Layout = ({ children }) => {
         {mobileOpen && (
           <div className="border-t border-slate-200 bg-slate-50 md:hidden">
             <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4">
+              <WhatsAppButton className="w-full" />
               {navItems.map((item) => (
                 <NavLink
                   key={item.label}
@@ -113,6 +116,7 @@ const Layout = ({ children }) => {
               <li><a href="tel:+254755375947">+254755375947</a></li>
               <li><Link to="/#contact">Book a consultation</Link></li>
             </ul>
+            <WhatsAppButton className="mt-4" />
           </div>
         </div>
         <div className="border-t border-slate-200">

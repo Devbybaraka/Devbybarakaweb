@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: devbybaraka-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm run server:prod
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_WHATSAPP
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
