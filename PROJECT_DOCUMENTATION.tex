@@ -1,0 +1,512 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+
+\pagestyle{fancy}
+\fancyhead[L]{Northstar Studio}
+\fancyhead[R]{Project Documentation}
+\fancyfoot[C]{\thepage}
+
+\lstset{
+  language=bash,
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  showstringspaces=false,
+  tabsize=2,
+  frame=single,
+  rulecolor=\color{black!30}
+}
+
+\title{\textbf{Northstar Studio} \\ Portfolio \& Order Management System \\ \textit{Complete Project Documentation}}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Project Overview}
+
+Northstar Studio is a freelance web development portfolio and B2B order management system (OMS). The platform allows clients to:
+\begin{itemize}
+  \item Browse portfolio projects and case studies
+  \item Submit project inquiries with service type, budget, and timeline
+  \item Track order status and communicate with the development team
+  \item Process payments via M-Pesa integration
+\end{itemize}
+
+The internal admin portal enables the development team to:
+\begin{itemize}
+  \item View all incoming client inquiries and orders
+  \item Update order status and add internal notes
+  \item Manage portfolio projects and case studies
+  \item Process payments and invoicing
+\end{itemize}
+
+\section{Technology Stack}
+
+\subsection{Frontend}
+\begin{itemize}
+  \item \textbf{React 18}: Component-based UI framework
+  \item \textbf{Vite}: Fast build tool and dev server
+  \item \textbf{React Router v7}: Client-side routing
+  \item \textbf{Tailwind CSS}: Utility-first CSS framework
+  \item \textbf{Lucide React}: Icon library
+\end{itemize}
+
+\subsection{Backend}
+\begin{itemize}
+  \item \textbf{Node.js}: JavaScript runtime
+  \item \textbf{Express.js}: Web application framework
+  \item \textbf{MongoDB}: NoSQL document database
+  \item \textbf{Mongoose}: MongoDB object modeling
+  \item \textbf{JWT}: JSON Web Tokens for authentication
+\end{itemize}
+
+\subsection{Security \& Middleware}
+\begin{itemize}
+  \item \textbf{Helmet.js}: HTTP headers security
+  \item \textbf{CORS}: Cross-Origin Resource Sharing protection
+  \item \textbf{express-rate-limit}: API rate limiting
+  \item \textbf{express-mongo-sanitize}: NoSQL injection protection
+  \item \textbf{Morgan}: HTTP request logging
+  \item \textbf{express-validator}: Input validation
+\end{itemize}
+
+\section{Project Structure}
+
+\begin{verbatim}
+my_website/
+├── src/                          # Frontend React application
+│   ├── api/
+│   │   └── client.js            # Axios HTTP client configuration
+│   ├── components/
+│   │   ├── Layout.jsx           # Main layout wrapper (ADMIN BUTTON REMOVED)
+│   │   ├── ProjectCard.jsx      # Portfolio project display card
+│   │   ├── SectionHeading.jsx   # Reusable section heading component
+│   │   └── SubmissionForm.jsx   # Client inquiry form component
+│   ├── context/
+│   │   └── AuthContext.jsx      # JWT token & user state management
+│   ├── pages/
+│   │   ├── HomePage.jsx         # Landing page with portfolio & inquiry form
+│   │   ├── AdminLoginPage.jsx   # Admin sign-in page
+│   │   └── AdminDashboardPage.jsx # Admin order & project management
+│   ├── App.jsx                  # Router configuration
+│   ├── main.jsx                 # React entry point
+│   └── index.css                # Global styles
+├── config/
+│   └── db.js                    # MongoDB connection with fallback to in-memory DB
+├── controllers/
+│   ├── authController.js        # Admin login & profile endpoints
+│   ├── orderController.js       # Order submission & management
+│   ├── projectController.js     # Portfolio project CRUD operations
+│   ├── uploadController.js      # File upload handling
+│   └── paymentController.js     # M-Pesa payment processing
+├── middleware/
+│   ├── authMiddleware.js        # JWT verification & admin role protection
+│   ├── errorMiddleware.js       # Centralized error handling
+│   └── validation.js            # Express-validator error handler
+├── models/
+│   ├── User.js                  # Admin user schema with password hashing
+│   ├── Order.js                 # Client inquiry & order schema
+│   ├── Project.js               # Portfolio project schema
+│   └── Payment.js               # Payment transaction schema
+├── routes/
+│   ├── authRoutes.js            # POST /api/auth/login, GET /api/auth/me
+│   ├── orderRoutes.js           # POST /api/orders, GET/PUT/DELETE for admin
+│   ├── projectRoutes.js         # Portfolio CRUD endpoints
+│   ├── uploadRoutes.js          # File upload endpoint
+│   └── paymentRoutes.js         # M-Pesa STK push, callback, verify
+├── utils/
+│   └── seedAdmin.js             # Initialize default admin account
+├── server.js                    # Express app bootstrap & startup
+├── .env                         # Environment variables (local)
+├── .env.example                 # Environment variables template
+├── package.json                 # Dependencies & NPM scripts
+├── tailwind.config.js           # Tailwind CSS configuration
+├── vite.config.js               # Vite build configuration
+└── README.md                    # Quick start guide
+\end{verbatim}
+
+\section{Admin Access \& Security}
+
+\subsection{Hidden Admin Interface}
+
+The admin button has been removed from the public-facing UI to prevent unauthorized access attempts. The admin portal is still fully functional but \textbf{completely hidden} from the public interface.
+
+\textbf{To access the admin panel:}
+\begin{enumerate}
+  \item Navigate to \texttt{http://localhost:5173/admin/login} directly in your browser
+  \item Use your email and password credentials
+  \item Upon successful authentication, you will be redirected to the admin dashboard
+\end{enumerate}
+
+\subsection{Security Measures}
+
+The admin system implements industry-standard security practices:
+
+\subsubsection{Authentication}
+\begin{itemize}
+  \item \textbf{JWT Tokens}: Admin sessions are protected by JSON Web Tokens stored securely in localStorage
+  \item \textbf{Password Hashing}: Admin passwords are hashed using bcrypt with 10 salt rounds
+  \item \textbf{Role-Based Access Control}: Only users with the \texttt{admin} role can access protected endpoints
+\end{itemize}
+
+\subsubsection{Route Protection}
+\begin{itemize}
+  \item All admin API endpoints require valid JWT authentication via Bearer token
+  \item The \texttt{authMiddleware.js} validates every protected request and verifies the admin role
+  \item Invalid or expired tokens are rejected automatically
+\end{itemize}
+
+\subsubsection{API Rate Limiting}
+\begin{itemize}
+  \item General API rate limit: \textbf{100 requests per 15 minutes}
+  \item Order submission rate limit: \textbf{5 requests per hour}
+  \item Prevents brute force attacks and abuse
+\end{itemize}
+
+\subsubsection{Input Validation}
+\begin{itemize}
+  \item All client-submitted data is validated using express-validator
+  \item Email format validation ensures legitimate contact information
+  \item Phone numbers and project details are sanitized
+  \item NoSQL injection attacks are prevented via express-mongo-sanitize
+\end{itemize}
+
+\subsubsection{HTTP Security Headers}
+\begin{itemize}
+  \item Helmet.js enforces HTTPS, XSS protection, and clickjacking prevention
+  \item CORS is strictly configured to allow only authorized origins
+  \item Content Security Policy headers protect against script injection
+\end{itemize}
+
+\section{Client Submission Process}
+
+\subsection{Overview}
+
+Clients submit project inquiries through the website contact form. The submission process is simple, intuitive, and includes robust validation.
+
+\subsection{Step-by-Step Submission Workflow}
+
+\subsubsection{Step 1: Navigate to Contact Form}
+The client scrolls to the ``Contact'' section on the homepage and finds the project inquiry form. The form is prominently displayed and easy to locate.
+
+\subsubsection{Step 2: Fill Out Project Details}
+The client provides the following information:
+\begin{itemize}
+  \item \textbf{Client Name}: Full name (required, non-empty)
+  \item \textbf{Company Name}: Business name (optional)
+  \item \textbf{Email Address}: Valid email for communication (required, must be valid email format)
+  \item \textbf{Phone Number}: Mobile or office phone (required, non-empty)
+  \item \textbf{Project Type}: Selection from predefined list
+    \begin{itemize}
+      \item Business Website
+      \item E-Commerce Store
+      \item Web App
+      \item Landing Page
+      \item Full-Stack System
+    \end{itemize}
+  \item \textbf{Package Plan}: Selection from three tiers
+    \begin{itemize}
+      \item Starter: KSh 25,000
+      \item Growth: KSh 60,000
+      \item Custom: From KSh 120,000
+    \end{itemize}
+  \item \textbf{Budget Range}: Client's budget estimate (required)
+  \item \textbf{Timeline}: Expected project duration
+    \begin{itemize}
+      \item 2-4 Weeks
+      \item 4-8 Weeks
+      \item 8-12 Weeks
+      \item 12+ Weeks
+    \end{itemize}
+  \item \textbf{Project Details}: Detailed description of project scope and requirements (required, minimum 20 characters)
+  \item \textbf{Payment Method}: Currently supports M-Pesa
+  \item \textbf{M-Pesa Phone Number}: Mobile number for payment (if M-Pesa selected)
+\end{itemize}
+
+\subsubsection{Step 3: Form Validation}
+The form performs real-time validation:
+\begin{itemize}
+  \item All required fields are checked before submission
+  \item Email address format is validated
+  \item Project details minimum length is enforced (20 characters)
+  \item Invalid entries display helpful error messages to the user
+\end{itemize}
+
+\subsubsection{Step 4: Submit Inquiry}
+The client clicks the ``Submit'' button. The frontend displays a loading state and sends the form data to the backend API endpoint:
+
+\texttt{POST /api/orders}
+
+\subsubsection{Step 5: Backend Processing}
+The server receives the inquiry and:
+\begin{enumerate}
+  \item Validates all input against security rules
+  \item Checks rate limits (max 5 submissions per hour from an IP)
+  \item Sanitizes the data to prevent injection attacks
+  \item Stores the order record in MongoDB with default status: \texttt{pending}
+  \item Assigns a unique order ID and timestamp
+  \item Returns a success response with order confirmation
+\end{enumerate}
+
+\subsubsection{Step 6: Client Confirmation}
+The client receives:
+\begin{itemize}
+  \item On-screen success message confirming receipt
+  \item Order ID for reference
+  \item Confirmation that the Northstar Studio team will review the inquiry
+\end{itemize}
+
+\subsection{Order Status Flow}
+
+After submission, orders pass through the following status stages:
+
+\begin{lstlisting}
+pending  →  under_review  →  quoted  →  accepted  →  in_progress  →  completed
+                    ↓
+            rejected (optional)
+\end{lstlisting}
+
+\subsection{Common Troubleshooting}
+
+\subsubsection{Submission Not Going Through}
+\begin{itemize}
+  \item Verify all required fields are filled (marked with *)
+  \item Ensure email address is valid (correct format: user@domain.com)
+  \item Check project details meet 20 character minimum
+  \item Clear browser cache and reload the page
+  \item Try submitting from a different browser
+\end{itemize}
+
+\subsubsection{``Too Many Requests'' Error}
+\begin{itemize}
+  \item Rate limit: maximum 5 submissions per hour per IP address
+  \item Solution: Wait at least 1 hour before submitting again, or use a different network
+\end{itemize}
+
+\subsubsection{Payment Issues}
+\begin{itemize}
+  \item Ensure M-Pesa phone number is in valid Kenya format: +254... or 07...
+  \item Confirm account has sufficient M-Pesa balance
+  \item Check internet connection stability
+  \item For Sandbox testing, use test phone numbers provided in .env
+\end{itemize}
+
+\section{Admin Dashboard Features}
+
+\subsection{Authentication}
+
+Admin credentials are seeded automatically at server startup:
+
+\begin{lstlisting}
+Email:    admin@company.com
+Password: ChangeMe123!
+\end{lstlisting}
+
+\textbf{Important:} Change this password immediately after first login in a production environment.
+
+\subsection{Dashboard Capabilities}
+
+\subsubsection{Orders Management}
+\begin{itemize}
+  \item View all submitted client inquiries and orders
+  \item Filter by status (pending, under\_review, quoted, accepted, in\_progress, completed)
+  \item Update order status to communicate progress
+  \item Add internal notes and remarks for team reference
+  \item Delete irrelevant or spam orders
+  \item Export order data for analytics
+\end{itemize}
+
+\subsubsection{Projects Management}
+\begin{itemize}
+  \item Create, edit, and delete portfolio projects
+  \item Add project title, slug, description, and technical stack
+  \item Upload featured image and project gallery
+  \item Add links to live website and GitHub repository
+  \item Mark projects as featured for homepage prominence
+  \item Manage project categories for filtering
+\end{itemize}
+
+\subsubsection{Metrics \& Analytics}
+\begin{itemize}
+  \item View total orders and revenue metrics
+  \item Track order fulfillment rate
+  \item Monitor conversion funnel from inquiry to completed project
+  \item See average project timeline and budget
+\end{itemize}
+
+\section{API Endpoints Reference}
+
+\subsection{Authentication}
+
+\begin{lstlisting}
+POST   /api/auth/login              Login with email & password
+GET    /api/auth/me                 Get current admin profile
+\end{lstlisting}
+
+\subsection{Orders}
+
+\begin{lstlisting}
+POST   /api/orders                  Submit new client inquiry
+GET    /api/orders                  List all orders (admin only)
+PUT    /api/orders/:id/status       Update order status (admin only)
+DELETE /api/orders/:id              Delete order (admin only)
+\end{lstlisting}
+
+\subsection{Projects}
+
+\begin{lstlisting}
+GET    /api/projects                List all portfolio projects
+POST   /api/projects                Create new project (admin only)
+PUT    /api/projects/:id            Update project (admin only)
+DELETE /api/projects/:id            Delete project (admin only)
+\end{lstlisting}
+
+\subsection{Payments}
+
+\begin{lstlisting}
+POST   /api/payments/stk-push       Initiate M-Pesa payment
+POST   /api/payments/callback       M-Pesa payment callback
+GET    /api/payments/verify/:id     Verify payment status
+\end{lstlisting}
+
+\section{Environment Variables}
+
+Create a \texttt{.env} file in the project root with:
+
+\begin{lstlisting}
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# Database (optional - uses in-memory fallback if not available)
+MONGODB_URI=mongodb://localhost:27017/northstar-studio
+
+# JWT Secret (change in production)
+JWT_SECRET=your_jwt_secret_key_here
+
+# CORS Origins
+ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+
+# M-Pesa (Daraja) Configuration
+MPESA_CONSUMER_KEY=your_consumer_key
+MPESA_CONSUMER_SECRET=your_consumer_secret
+MPESA_SHORTCODE=your_shortcode
+MPESA_PASSKEY=your_passkey
+MPESA_CALLBACK_URL=https://yourdomain.com/api/payments/callback
+
+# File Upload
+MAX_FILE_SIZE=5242880
+ALLOWED_FILE_TYPES=image/jpeg,image/png,image/webp
+
+# Email Service (for notifications)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+\end{lstlisting}
+
+\section{Installation \& Deployment}
+
+\subsection{Local Development Setup}
+
+\begin{lstlisting}[language=bash]
+# Clone or extract project
+cd my_website
+
+# Install dependencies
+npm install
+
+# Start backend server (runs on port 5000)
+npm run server
+
+# In a new terminal, start frontend dev server (runs on port 5173)
+npm run client
+
+# Or run both concurrently (if available)
+npm run dev
+\end{lstlisting}
+
+\subsection{Production Build}
+
+\begin{lstlisting}[language=bash]
+# Create optimized production build
+npm run build
+
+# Output is in dist/ directory - ready for deployment
+\end{lstlisting}
+
+\subsection{Database Setup}
+
+\begin{itemize}
+  \item \textbf{Development}: In-memory MongoDB (mongodb-memory-server) - no setup needed
+  \item \textbf{Production}: Configure MONGODB\_URI to point to hosted MongoDB instance
+    \begin{itemize}
+      \item MongoDB Atlas (cloud) - recommended
+      \item Self-hosted MongoDB server
+    \end{itemize}
+\end{itemize}
+
+\section{Security Best Practices}
+
+\subsection{Before Going to Production}
+
+\begin{enumerate}
+  \item Change the default admin password immediately
+  \item Generate a secure, random JWT\_SECRET (minimum 32 characters)
+  \item Enable HTTPS/TLS on your domain
+  \item Configure ALLOWED\_ORIGINS to only include your domain
+  \item Set NODE\_ENV=production
+  \item Enable MongoDB authentication with strong database password
+  \item Set up automated backups for database
+  \item Configure rate limits appropriately for expected traffic
+  \item Use environment variables for all secrets (never commit to git)
+  \item Set up CORS whitelist to prevent cross-site attacks
+  \item Implement request logging and monitoring
+\end{enumerate}
+
+\subsection{Ongoing Security}
+
+\begin{itemize}
+  \item Regularly update Node.js packages: \texttt{npm audit fix}
+  \item Monitor admin login attempts for suspicious activity
+  \item Implement IP whitelisting for admin access if possible
+  \item Use strong, unique passwords for all admin accounts
+  \item Rotate JWT secrets periodically
+  \item Keep database backups and test restoration regularly
+  \item Review and audit order data for suspicious submissions
+  \item Monitor API usage and rate limit violations
+\end{itemize}
+
+\section{Support \& Maintenance}
+
+For technical issues or feature requests:
+\begin{enumerate}
+  \item Check the troubleshooting section
+  \item Review server logs for error messages
+  \item Verify all environment variables are configured correctly
+  \item Ensure MongoDB connection is working
+  \item Test API endpoints with Postman or similar tools
+\end{enumerate}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}\\
+Northstar Studio - Freelance Web Development
+\end{center}
+
+\end{document}
