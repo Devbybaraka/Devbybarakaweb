@@ -12,7 +12,7 @@ export const loginAdmin = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await User.findOne({ email: email.trim().toLowerCase() });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid admin credentials.' });
@@ -65,7 +65,8 @@ export const createAdminUser = async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ $or: [{ email: email.toLowerCase() }, { username }] });
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingUser = await User.findOne({ $or: [{ email: normalizedEmail }, { username }] });
 
     if (existingUser) {
       return res.status(409).json({ message: 'A user with that email or username already exists.' });
@@ -74,7 +75,7 @@ export const createAdminUser = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await User.create({
       username,
-      email: email.toLowerCase(),
+      email: normalizedEmail,
       password: passwordHash,
       role,
       permissions,
