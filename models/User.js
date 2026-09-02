@@ -21,8 +21,13 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin'],
-    default: 'admin',
+    enum: ['owner', 'manager', 'editor', 'sales'],
+    default: 'owner',
+  },
+  permissions: {
+    type: [String],
+    enum: ['manage_admins', 'manage_projects', 'manage_orders', 'delete_orders', 'upload_images'],
+    default: [],
   },
 }, { timestamps: true });
 

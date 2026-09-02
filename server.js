@@ -82,6 +82,8 @@ app.use('/api/orders', orderRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
+export { app };
+
 const startServer = async () => {
   try {
     await connectDB();
@@ -95,4 +97,6 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}

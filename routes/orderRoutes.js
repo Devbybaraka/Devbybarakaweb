@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { protectAdmin } from '../middleware/authMiddleware.js';
+import { protectAdmin, requirePermission } from '../middleware/authMiddleware.js';
 import { handleValidationErrors } from '../middleware/validation.js';
 import { deleteOrder, getOrders, submitOrder, trackOrder, updateOrderStatus } from '../controllers/orderController.js';
 
@@ -20,9 +20,9 @@ router.post(
   submitOrder,
 );
 
-router.get('/', protectAdmin, getOrders);
+router.get('/', protectAdmin, requirePermission('manage_orders'), getOrders);
 router.get('/track', trackOrder);
-router.put('/:id/status', protectAdmin, updateOrderStatus);
-router.delete('/:id', protectAdmin, deleteOrder);
+router.put('/:id/status', protectAdmin, requirePermission('manage_orders'), updateOrderStatus);
+router.delete('/:id', protectAdmin, requirePermission('delete_orders'), deleteOrder);
 
 export default router;

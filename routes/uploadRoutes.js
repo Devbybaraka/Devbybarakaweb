@@ -1,12 +1,12 @@
 import express from 'express';
 import multer from 'multer';
 import cloudinary from '../config/cloudinary.js';
-import { protectAdmin } from '../middleware/authMiddleware.js';
+import { protectAdmin, requirePermission } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/', protectAdmin, upload.single('image'), async (req, res) => {
+router.post('/', protectAdmin, requirePermission('upload_images'), upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No image file provided.' });

@@ -1,7 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { loginAdmin, getAdminProfile } from '../controllers/authController.js';
-import { protectAdmin } from '../middleware/authMiddleware.js';
+import { createAdminUser, loginAdmin, getAdminProfile } from '../controllers/authController.js';
+import { protectAdmin, requirePermission } from '../middleware/authMiddleware.js';
 import { handleValidationErrors } from '../middleware/validation.js';
 
 const router = express.Router();
@@ -17,5 +17,7 @@ router.post(
 );
 
 router.get('/me', protectAdmin, getAdminProfile);
+
+router.post('/users', protectAdmin, requirePermission('manage_admins'), createAdminUser);
 
 export default router;
