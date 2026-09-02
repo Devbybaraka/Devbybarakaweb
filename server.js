@@ -18,7 +18,7 @@ dotenv.config();
 const app = express();
 const port = Number(process.env.PORT) || 5000;
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,https://devbybarakaweb.vercel.app')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
