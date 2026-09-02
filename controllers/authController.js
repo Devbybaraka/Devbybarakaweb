@@ -6,19 +6,27 @@ const allowedRoles = ['owner', 'manager', 'editor', 'sales'];
 
 export const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
+  const normalizedEmail = email?.trim().toLowerCase();
+  const configuredAdminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const isConfiguredAdmin = Boolean(
+    configuredAdminEmail
+      && process.env.ADMIN_PASSWORD
+      && normalizedEmail === configuredAdminEmail
+      && password === process.env.ADMIN_PASSWORD,
+  );
 
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required.' });
   }
 
   try {
-    const user = await User.findOne({ email: email.trim().toLowerCase() });
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid admin credentials.' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = isConfiguredAdmin || await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid admin credentials.' });
